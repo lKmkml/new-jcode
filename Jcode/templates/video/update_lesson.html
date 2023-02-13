@@ -1,0 +1,16 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+
+
+<h3 style="text-align: center;"><b>แก้ไข Lesson</b></h3>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div style="text-align: center;">
+    {{ form.as_p }}
+  </div>
+  <div style="text-align: center;">
+    <input type="submit" class="btn btn btn-update mx-2" value="Update">
+  </div>
+</form>
+{% endblock %}

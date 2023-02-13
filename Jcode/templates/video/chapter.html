@@ -1,0 +1,31 @@
+{% extends "layout/base.html" %}
+
+
+{% block content %}
+<div class="container">
+    <div class="row">
+      <h3 style="text-align: center;"><b>จัดการ Chapter</b></h3>
+      <h5 style="float: left;"><i class="fa fa-chevron-left"></i><a href="{% url 'app:index' %}"> ย้อนกลับ</a></h5>
+        <div class="col-lg-8 offset-lg-2">
+            <div style="text-align: center;">
+              <a class="btn btn-addchapter mt-2" href="{% url 'video:video_addchapter' id=ids %}">เพิ่มChapter </a>
+            </div>
+            <table class="my-4">
+              <tr>
+                <th>หัวข้อหลัก</th>
+                <th>ลำดับ</th>
+                <th colspan="2">Action</th>
+              </tr>
+              {% for chapter in chapters_list %}
+              <tr>
+                <td><a href="{% url 'video:management_lesson' id=chapter.id %}">{{ chapter.name }}</a></td>
+                <td>{{ chapter.ordered }}</td>
+                <td><a href="{% url 'video:update_chapter' id=chapter.id %}">แก้ไข</a> </td>
+                <td><a href="{% url 'video:chapter_delete' id=chapter.id %}" style="color: #FF0404;">ลบ</a></td>
+              </tr>
+              {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
