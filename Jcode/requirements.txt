@@ -1,0 +1,3 @@
+django
+python-slugify
+django-crispy-forms
