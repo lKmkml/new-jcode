@@ -8,7 +8,7 @@
             <h3 style="text-align: center;"><b>เพิ่มบทเรียน</b></h3>
             <form method="post" enctype="multipart/form-data" novalidate action="?courseid={{courseid}}&chapterid={{chapterid}}">
                 {% csrf_token %}
-                {{ form }}
+                {{ form.as_p }}
                 <button type="submit" class="btn btn-success">บันทึก</button>
             </form>
         </div>

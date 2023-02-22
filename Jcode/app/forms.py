@@ -21,3 +21,7 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Member
         exclude = ['id','user', 'created', 'updated']
+        labels ={
+            'user_code':'username',
+            'description':'รายละเอียด',
+        }

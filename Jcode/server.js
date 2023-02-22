@@ -5,6 +5,6 @@ const app = express();
 
 app.use(express.static(path.join(__dirname)));
 
-app.listen(8000, function () {
-  console.log('Video streaming server listening on port 8000!');
+app.listen(5000, function () {
+  console.log('Video streaming server listening on port 5000!');
 });

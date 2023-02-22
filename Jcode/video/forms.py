@@ -4,7 +4,7 @@ from .models import Video,VideoChapter,VideoLesson
 class VideoForm(forms.ModelForm):
     class Meta:
         model = Video
-        exclude = ['id','member', 'slug', 'published', 'created', 'updated']
+        exclude = ['id','member', 'slug', 'created', 'updated']
         labels ={
             'name':'ชื่อ',
             'description':'รายละเอียด',

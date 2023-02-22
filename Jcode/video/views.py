@@ -35,7 +35,7 @@ class BookDetailView(DetailView):
 
 def management_course(request):
     videos = Video.objects.filter(member__user=request.user.id)
-    return render(request,'video/course.html',{"video_list":videos})
+    return render(request,'video/course/course.html',{"video_list":videos})
 
 
 def video_add(request):
@@ -52,7 +52,7 @@ def video_add(request):
             messages.success(request, 'บันทึกสำเร็จ')
             return HttpResponseRedirect(reverse('video:management_course'))
         messages.error(request, 'บันทึกไม่สำเร็จ!')
-    return render(request, 'video/add.html', {
+    return render(request, 'video/course/add_course.html', {
         'form': form,
     })
 
@@ -67,7 +67,7 @@ def update_video(request, id):
             return redirect('video:management_course')
     else:
         form = VideoForm(instance=videos)
-    return render(request, 'video/update_video.html', {'form': form})
+    return render(request, 'video/course/update_course.html', {'form': form})
 
 
 def video_delete(request, id):
@@ -85,7 +85,7 @@ def video_delete(request, id):
 def management_chapter(request):
     courseid=request.GET.get('courseid')
     chapters = VideoChapter.objects.filter(video__id=courseid)
-    return render(request,'video/chapter.html',{"chapters_list":chapters,"courseid":courseid})
+    return render(request,'video/chapter/chapter.html',{"chapters_list":chapters,"courseid":courseid})
 
 
 def video_addchapter(request):
@@ -101,7 +101,7 @@ def video_addchapter(request):
             messages.success(request, 'บันทึกสำเร็จ')
             return HttpResponseRedirect(reverse('video:management_chapter')+'?courseid='+str(courseid))
         messages.error(request, 'บันทึกไม่สำเร็จ!')
-    return render(request, 'video/add_chapter.html', {
+    return render(request, 'video/chapter/add_chapter.html', {
         'form': form,
     })
 
@@ -117,7 +117,7 @@ def update_chapter(request, id):
             return redirect(reverse('video:management_chapter')+'?courseid='+str(courseid))
     else:
         form = VideochapterForm(instance=chapters)
-    return render(request, 'video/update_chapter.html', {'form': form,'courseid':courseid})
+    return render(request, 'video/chapter/update_chapter.html', {'form': form,'courseid':courseid})
 
 
 def chapter_delete(request, id):
@@ -138,7 +138,7 @@ def management_lesson(request):
     courseid=request.GET.get('courseid')
     chapterid=request.GET.get('chapterid')
     lesson = VideoLesson.objects.filter(chapter__id=chapterid)
-    return render(request,'video/lesson.html',{"lesson_list":lesson,"courseid":courseid,"chapterid":chapterid})
+    return render(request,'video/lesson/lesson.html',{"lesson_list":lesson,"courseid":courseid,"chapterid":chapterid})
 
 
 def video_addlesson(request):
@@ -156,7 +156,7 @@ def video_addlesson(request):
             messages.success(request, 'บันทึกสำเร็จ')
             return redirect(reverse('video:management_lesson')+'?courseid='+str(courseid)+'&chapterid='+str(chapterid))
         messages.error(request, 'บันทึกไม่สำเร็จ!')
-    return render(request, 'video/add_lesson.html', {
+    return render(request, 'video/lesson/add_lesson.html', {
         'form': form,
         'courseid':courseid,
         'chapterid':chapterid,
@@ -168,7 +168,7 @@ def update_lesson(request, id):
     chapterid=request.GET.get('chapterid')
     lessons= VideoLesson.objects.get(id=id)
     if request.method == 'POST':
-        form = VideolessonForm(request.POST,  instance=lessons)
+        form = VideolessonForm(request.POST, request.FILES,  instance=lessons)
         if form.is_valid():
             lesson_obj = form.save(commit=False)
             lesson_obj.videos_id=courseid
@@ -178,7 +178,7 @@ def update_lesson(request, id):
             return redirect(reverse('video:management_lesson')+'?courseid='+str(courseid)+'&chapterid='+str(chapterid))
     else:
         form = VideolessonForm(instance=lessons)
-    return render(request, 'video/update_lesson.html', {
+    return render(request, 'video/lesson/update_lesson.html', {
         'form': form,
         'courseid':courseid,
         'chapterid':chapterid,

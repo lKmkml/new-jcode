@@ -7,14 +7,23 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-8 offset-lg-2">
-            <h3 style="text-align: center;"><b>เพิ่ม Chapter</b></h3>
+            <h3 style="text-align: center;"><b>จัดการโปรไฟล์</b></h3>
+
+
+            <div class="manageprofile_img" style="text-align: center;" >
+                {% if member_list.Profile_image %}
+                <img src="{{member_list.Profile_image.url}}" alt="" >
+                {% endif %}
+            </div>
+
+
             <form method="post" enctype="multipart/form-data" novalidate>
                 {% csrf_token %}
                 <table border="1">
                 {{form.as_table}}
                 <tr>
                     <th>
-                        First name:
+                        ชื่อจริง :
                     </th>
                     <td>
                         <input type="text" value="{{ profile.user.first_name }}" name="firstname">
@@ -22,7 +31,7 @@
                 </tr>
                 <tr>
                     <th>
-                        Last name:
+                        นามสกุล :
                     </th>
                     <td>
                         <input type="text" value="{{ profile.user.last_name }}" name="lastname">

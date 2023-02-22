@@ -28,8 +28,8 @@
               ― สามารถเข้าสู่ระบบผ่าน ―
             </div>
             <div class="loginwith">
-                <a href="#"><i class="fa-brands fa-google"></i></a>
-                <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                <a href="{% url 'social:begin' 'google-oauth2' %}"><i class="fa-brands fa-google"></i></a>
+                <a href="{% url 'social:begin' 'facebook' %}"><i class="fa-brands fa-facebook"></i></a>
                 <a href="#"><i class="fa-solid fa-mobile-screen-button"></i></a>
             </div>
                 <!-- <img class="btngoogle" src="{% static 'img/google.png' %}" alt="" >

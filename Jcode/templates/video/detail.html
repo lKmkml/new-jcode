@@ -1,23 +1,30 @@
 {% extends "layout/base.html" %}
 
 {% block content %}
-<div class="subnav mb-5">
+  <div class="subnav">
     <div class="container">
-      <div class="pricetag">
-        โปรโมชั่น
-        <h3>฿{{ video.price }}</h3>
+      <div class="float-end mt-2">
+        <h2>฿{{ video.price }}</h2>
       </div>
       <h1>{{ video.name }}</h1>
       <a href="{% url 'video:index' %}"class='text-white'><i class="fa fa-chevron-left"></i>ย้อนกลับ</a>
     </div>
   </div>
-  {% regroup video.get_chapter_set_with_ordered by chapter as chapter_list %}
-        {% if video.videoexample %}
-        <video id="videoplayer" controls width="400" height="300">
-          <source src="http://192.168.1.103:8000{{video.videoexample.url}}" type="video/mp4" >
+  <div class="container mt-3">
+    <div class="row g-5">
+      <div class="col-lg-8">
+        <div class=" mb-4">
+          {% if video.videoexample %}
+        <video id="videoplayer" controls width="550" height="400">
+          <source src="http://192.168.1.5:5000{{video.videoexample.url}}" type="video/mp4" >
           Your browser does not support HTML5 video.
         </video>
         {% endif %}
+          </a>
+        </div>
+
+        {% regroup video.get_chapter_set_with_ordered by chapter as chapter_list %}
+
         <div class="row g-5">
           <div class="col-lg-8">
             <div class="accordion mb-5" id="accordionExample">
@@ -41,7 +48,7 @@
                               <td><i class="far fa-clock"></i> {{ lesson.duration_time }}</td>
                               {% if lesson.lessonvideo %}
                               {% if lesson.is_locked == False %}
-                                <td><button videourl='http://192.168.1.103:8000{{lesson.lessonvideo.url}}' class="btn-play"><i class="far fa-circle-play"></i>videoplay</button></td>
+                                <td><button videourl='http://192.168.1.5:5000{{lesson.lessonvideo.url}}' class="btn-play"><i class="far fa-circle-play"></i>videoplay</button></td>
                               {% elif lesson.is_locked == True %}
                                 <td><i class="fa fa-lock"></i></td>
                               {% endif %}
@@ -58,34 +65,22 @@
       </div>
     </div>
 
+      </div>
       <div class="col-lg-4">
-        <a href="#"class='btn btn-success btn-lg py-3 w-100'>สั่งซื้อคอร์สนี้</a>
-        <div class="my-4">
-          <h5>รายละเอียด</h5>
+        <a href="#" class="btn btn-success btn-lg py-3 w-100">Enroll</a>
+        <div class="my-5">
+          <h4>รายละเอียด</h4>
           {{ video.description }}
         </div>
-        <div class="profile my-4">
-          <h4>ประวัติผู้สอน</h4>
-
+        <div class="my-5">
+          <h4>เกี่ยวกับผู้สอน</h4>
+          <div class="profile">
+            <img src="{{video.member.Profile_image.url}}" style="width: 100px; border-radius: 50%;" alt="">
+            <div class="mt-3 ">{{video.member.user.first_name}} {{video.member.user.last_name}} ( {{video.member.user_code}} )</div>
+            <div class="mt2 ">{{video.member.description}}</div>
+          </div>
         </div>
       </div>
-
-
-  <div class="container">
-    <div class="row mb-4">
-        <div class="col-lg-3">
-            {% if video.image %}
-            <img src="{{ video.image.url }}" class="img-fluid" alt="">
-            {% endif %}
-        </div>
-        <div class="col-lg-9">
-            <h1>{{ video.name }}</h1>
-            <strong>Author</strong>
-            <span class="">{{ video.member }}</span>
-            <div class="mt-4 mb-4"></div>
-            <h5 class="mb-4">฿ {{ video.price }} {{video.member.description}} {{video.member.user.first_name}}</h5>
-            <img src="{{video.member.Profile_image.url}}" alt="" >
-        </div>
     </div>
   </div>
 

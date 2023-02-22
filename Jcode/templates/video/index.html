@@ -22,7 +22,7 @@
         <div class="card card-course mb-4">
 
 
-          <a href="#">
+          <a href="{% url 'video:detail' slug=b.slug %}">
             {% if b.image %}
             <img src="{{b.image.url}}" alt="" class="card-img-top" >
             {% endif %}
@@ -43,6 +43,9 @@
             <i class="fa fa-video"></i>
             {{ b.videolesson_set.count }} บทเรียน
           </div>
+          <div class="small">
+            ผู้สอน {{b.member}}
+          </div>
 
         <div class="small rating">
           <i class="fa fa-star"></i>
@@ -55,7 +58,7 @@
         </div>
 
         <div class="card-footer border-0 bg-transparent">
-          <h5>฿ {{b.price}} {{b.member}} {{c.user_code}}</h5>
+          <h5>฿ {{b.price}}  </h5>
         </div>
 
         </div>

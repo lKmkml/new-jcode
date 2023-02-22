@@ -99,7 +99,7 @@ h2{
 .btn-category {
   color: rgb(255, 255, 255);
   background-color: #5179DC;
-  border-radius: 20px;
+
 }
 .btn-category:hover {
   color: rgb(255, 255, 255);
@@ -111,10 +111,13 @@ span {
 }
 
 .subnav{
-  padding: 60px 0;
+  padding: 40px 0;
   background-color: #333;
   color: #fff;
+  margin-bottom: 40px;
 }
+
+
 .subnav .pricetag{
   float:right;
 }
@@ -308,4 +311,11 @@ h6{
 .fabrands .fa-google-{
   width: 200px;
   height: 20px;
+}
+.manageprofile_img img{
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 5px solid #D6E1F9;
+
 }
