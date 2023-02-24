@@ -3,13 +3,14 @@
 
 {% block content %}
 <div class="container">
+    <h6 style="float: left;"><i class="fa fa-chevron-left"></i><a href="{% url 'video:management_chapter' %}?courseid={{courseid}}"> ย้อนกลับ</a></h6>
     <div class="row">
         <div class="col-lg-8 offset-lg-2">
             <h3 style="text-align: center;"><b>เพิ่มบทเรียน</b></h3>
-            <form method="post" enctype="multipart/form-data" novalidate action="?courseid={{courseid}}&chapterid={{chapterid}}">
+            <form method="post" enctype="multipart/form-data" novalidate action="?courseid={{courseid}}&chapterid={{chapterid}}" style="text-align: center;">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button type="submit" class="btn btn-success">บันทึก</button>
+                <button type="submit" class="btn btn-save">บันทึก</button>
             </form>
         </div>
     </div>

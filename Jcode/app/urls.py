@@ -10,5 +10,5 @@ urlpatterns = [
     path('profile/', views.profile_management,name='profile'),
     path('search/', views.search_video,name='search'),
     path('login/facebook/', views.facebook_login, name='facebook_login'),
-    #path('product/autocomplete/', autocom.VideoAutocompleteView.as_view(), name='product-autocomplete'),
+    path('autocomplete/', views.video_autocomplete, name='video_autocomplete'),
 ]

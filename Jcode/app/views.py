@@ -39,12 +39,19 @@ def signup_view(request):
     if request.method == 'POST':
         form = SignUpForm(data=request.POST)
         if form.is_valid():
+            # users
             user = form.save()
             user.refresh_from_db()
             user.email = form.cleaned_data.get('email')
             user.save()
+            # member
+            obj_email = form.cleaned_data.get('email')
+            print('obj_email=', obj_email)
+            print(obj_email.split('@')[0] if '@' in obj_email else obj_email)
+
             m=Member()
             m.user_id = user.id
+            m.user_code = obj_email.split('@')[0] if '@' in obj_email else obj_email
             m.save()
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=user.username, password=raw_password)
@@ -90,3 +97,16 @@ def facebook_login(request):
     else:
         login(request, user)
         return redirect('home')
+
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
+from django.db.models import Q
+
+
+@require_GET
+def video_autocomplete(request):
+    query = request.GET.get('qry', '')
+    if len(query) < 2:
+        return JsonResponse({'results': []})
+    results = Video.objects.filter(Q(name__icontains=query) | Q(description__icontains=query)).values('id', 'name', 'image','slug')
+    return JsonResponse({'results': list(results)})

@@ -56,11 +56,11 @@
           {% csrf_token %}
         <div class="navbar-search">
           <i class="fa fa-search"></i>
-        <input type="text" name="txtSearch" class="form-control" placeholder="ค้นหาคอร์สเรียน">
+        <input type="text" name="txtSearch" class="advanced2AutoCompleteInput form-control" placeholder="ค้นหาคอร์สเรียน" autocomplete="off">
         <input type="submit" style="display:none" />
       </div>
     </form>
-    <input class="form-control basicAutoComplete" type="text" autocomplete="off">
+
     </div>
         <ul class="navbar-nav ms-auto mb-2 mb-md-0">
           <li class="nav-item mx-2">
@@ -159,10 +159,35 @@
 {% endfor %}
 {% endif %}
 <script>
-$('.basicAutoComplete').autoComplete({
-    resolverSettings: {
-        url:'/static/test-list.json'
+$(document).ready(function() {
+  $('.advanced2AutoCompleteInput').autoComplete({
+    resolver: 'custom',
+    formatResult: function(item) {
+      var url = "{% url 'video:detail' slug='__slug__' %}".replace('__slug__', item.slug);
+      return {
+        value: item.id,
+        text: item.name,
+        html:
+          $('<img>').attr('src', '/media/'+item.image).css('height', 18).
+          add($('<span>').text(item.name))
+        .on('click', function() {
+          window.location.href = url;
+        })
+      };
+    },
+    events: {
+      search: function(qry, callback) {
+        $.ajax({
+          url: '/autocomplete/',
+          data: { 'qry': qry },
+          success: function(data) {
+            callback(data.results);
+          }
+        });
+      }
     }
+  });
 });
+
 </script>
 </html>

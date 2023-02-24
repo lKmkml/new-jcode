@@ -28,8 +28,11 @@ class BookDetailView(DetailView):
     slug_url_kwarg = 'slug'
 
 
+
+
+
 #------------------------------------------------------
-#chapter management
+#course management
 #------------------------------------------------------
 
 
@@ -103,6 +106,7 @@ def video_addchapter(request):
         messages.error(request, 'บันทึกไม่สำเร็จ!')
     return render(request, 'video/chapter/add_chapter.html', {
         'form': form,
+        "courseid":courseid
     })
 
 
