@@ -9,10 +9,16 @@ from .forms import EmailAuthenticationForm,SignUpForm,ProfileForm
 from django.contrib import messages
 
 
+#Landing page
 def index(request):
     video = Video.objects.filter(published=True)
     context = {'video_list':video,}
     return render(request,'index.html',context)
+
+
+#------------------------------------------------------
+#Login with email
+#------------------------------------------------------
 
 
 def login_view(request):
@@ -29,39 +35,41 @@ def login_view(request):
         })
 
 
+#------------------------------------------------------
+#Logout
+#------------------------------------------------------
 def logout_view(request):
     if request.method == 'POST':
         logout(request)
         return redirect('app:index')
+    
+
+#------------------------------------------------------
+#Sign up from email and save member default
+#------------------------------------------------------
 
 
 def signup_view(request):
     if request.method == 'POST':
         form = SignUpForm(data=request.POST)
         if form.is_valid():
-            # users
-            user = form.save()
-            user.refresh_from_db()
-            user.email = form.cleaned_data.get('email')
+            user = form.save(commit=False)
+            email = form.cleaned_data.get('email')
+            username = email.split('@')[0]
+            user.username = username
             user.save()
-            # member
-            obj_email = form.cleaned_data.get('email')
-            print('obj_email=', obj_email)
-            print(obj_email.split('@')[0] if '@' in obj_email else obj_email)
-
-            m=Member()
-            m.user_id = user.id
-            m.user_code = obj_email.split('@')[0] if '@' in obj_email else obj_email
-            m.save()
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=user.username, password=raw_password)
-            login(request,user)
+            member = Member(user=user,user_code=username)
+            member.save()
             return redirect('app:login')
     else:
         form = SignUpForm()
     return render(request,'account/signup.html',{
             'form':form
         })
+
+#------------------------------------------------------
+#edit profile // Member models
+#------------------------------------------------------
 
 
 def profile_management(request):
@@ -85,19 +93,20 @@ def profile_management(request):
         })
 
 
+#------------------------------------------------------
+#Search page (default)
+#------------------------------------------------------
+
+
 def search_video(request):
     txt_search = request.POST.get('txtSearch')
     video_list = Video.objects.filter(name__contains=txt_search,published=True)
     return render(request, 'search.html', {'video_list': video_list})
 
-def facebook_login(request):
-    user = request.email
-    if user.is_authenticated:
-        return redirect('home')
-    else:
-        login(request, user)
-        return redirect('home')
 
+#------------------------------------------------------
+#Search autocomplete 
+#------------------------------------------------------
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 from django.db.models import Q
@@ -110,3 +119,15 @@ def video_autocomplete(request):
         return JsonResponse({'results': []})
     results = Video.objects.filter(Q(name__icontains=query) | Q(description__icontains=query)).values('id', 'name', 'image','slug')
     return JsonResponse({'results': list(results)})
+
+
+#------------------------------------------------------
+#facebook login (not finish)
+#------------------------------------------------------
+def facebook_login(request):
+    user = request.email
+    if user.is_authenticated:
+        return redirect('home')
+    else:
+        login(request, user)
+        return redirect('home')

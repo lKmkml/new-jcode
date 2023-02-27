@@ -9,6 +9,11 @@ from django.urls import reverse
 from slugify import slugify
 
 
+#------------------------------------------------------
+#Video page
+#------------------------------------------------------
+
+
 def index(request):
     video = Video.objects.filter(published=True)
     categ_id = request.GET.get('categoryid')
@@ -22,13 +27,15 @@ def index(request):
     return render(request,'video/index.html',context)
 
 
+#------------------------------------------------------
+#Detail Course
+#------------------------------------------------------
+
+
 class BookDetailView(DetailView):
     model = Video
     template_name = 'video/detail.html'
     slug_url_kwarg = 'slug'
-
-
-
 
 
 #------------------------------------------------------
@@ -36,11 +43,13 @@ class BookDetailView(DetailView):
 #------------------------------------------------------
 
 
+#Show Course
 def management_course(request):
     videos = Video.objects.filter(member__user=request.user.id)
     return render(request,'video/course/course.html',{"video_list":videos})
 
 
+#Add Course
 def video_add(request):
     form = VideoForm()
     if request.method == 'POST':
@@ -60,6 +69,7 @@ def video_add(request):
     })
 
 
+#Edit Course
 def update_video(request, id):
     videos= Video.objects.get(id=id)
     if request.method == 'POST':
@@ -73,6 +83,7 @@ def update_video(request, id):
     return render(request, 'video/course/update_course.html', {'form': form})
 
 
+#Delete Course
 def video_delete(request, id):
     videos = Video.objects.get(id=id)
     videos.delete()
@@ -85,12 +96,14 @@ def video_delete(request, id):
 #------------------------------------------------------
 
 
+#Show Chapter
 def management_chapter(request):
     courseid=request.GET.get('courseid')
     chapters = VideoChapter.objects.filter(video__id=courseid)
     return render(request,'video/chapter/chapter.html',{"chapters_list":chapters,"courseid":courseid})
 
 
+#Add Chapter
 def video_addchapter(request):
     form = VideochapterForm()
     courseid=request.GET.get('courseid')
@@ -110,6 +123,7 @@ def video_addchapter(request):
     })
 
 
+#Edit Chapter
 def update_chapter(request, id):
     courseid=request.GET.get('courseid')
     chapters= VideoChapter.objects.get(id=id)
@@ -124,6 +138,7 @@ def update_chapter(request, id):
     return render(request, 'video/chapter/update_chapter.html', {'form': form,'courseid':courseid})
 
 
+#Delete Chapter
 def chapter_delete(request, id):
     courseid=request.GET.get('courseid')
     chaptervideo = VideoChapter.objects.get(id=id)
@@ -138,6 +153,7 @@ def chapter_delete(request, id):
 #------------------------------------------------------
 
 
+#Show Lesson
 def management_lesson(request):
     courseid=request.GET.get('courseid')
     chapterid=request.GET.get('chapterid')
@@ -145,6 +161,7 @@ def management_lesson(request):
     return render(request,'video/lesson/lesson.html',{"lesson_list":lesson,"courseid":courseid,"chapterid":chapterid})
 
 
+#Add Lesson
 def video_addlesson(request):
     form = VideolessonForm()
     courseid=request.GET.get('courseid')
@@ -167,6 +184,7 @@ def video_addlesson(request):
     })
 
 
+#Edit Lesson
 def update_lesson(request, id):
     courseid=request.GET.get('courseid')
     chapterid=request.GET.get('chapterid')
@@ -188,6 +206,8 @@ def update_lesson(request, id):
         'chapterid':chapterid,
         })
 
+
+#Delete Lesson
 def lesson_delete(request, id):
     courseid=request.GET.get('courseid')
     chapterid=request.GET.get('chapterid')
@@ -196,12 +216,4 @@ def lesson_delete(request, id):
     messages.success(request, 'ลบสำเร็จ')
     return redirect(reverse('video:management_lesson')+'?courseid='+str(courseid)+'&chapterid='+str(chapterid))
 
-from django.http import JsonResponse
-from django.views.decorators.http import require_GET
 
-@require_GET
-def autocomplete(request):
-    query = request.GET.get('term', '')
-    # Here you can perform a database query or other data lookup to generate suggestions
-    suggestions = ["apple", "banana", "cherry"]  # Example data
-    return JsonResponse(suggestions, safe=False)
