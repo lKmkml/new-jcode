@@ -2,3 +2,4 @@ django
 python-slugify
 django-crispy-forms
 social-auth-app-django
+django-star-ratings

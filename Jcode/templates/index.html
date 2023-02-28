@@ -1,6 +1,7 @@
 {% extends "layout/base.html" %}
 
 {% load static %}
+{% load humanize %}
 
 {% block title %} Index Page {% endblock %}
 
@@ -53,7 +54,7 @@
       </div>
       </div>
       <div class="card-footer border-0 bg-transparent">
-        <h5>฿ {{b.price}} </h5>
+        <h5>฿ {{b.price|floatformat:0|intcomma}} </h5>
       </div>
 
       </div>

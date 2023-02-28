@@ -1,6 +1,9 @@
 from django import forms
 from .models import Video,VideoChapter,VideoLesson
 
+#------------------------------------------------------
+#ฟอร์มเกี่ยวกับ course
+#------------------------------------------------------
 class VideoForm(forms.ModelForm):
     class Meta:
         model = Video
@@ -16,6 +19,16 @@ class VideoForm(forms.ModelForm):
             'price_before':'ราคาเต็ม'
         }
 
+
+    def __init__(self, *args, **kwargs):
+            super(VideoForm, self).__init__(*args, **kwargs)
+            for field_name, field in self.fields.items():
+                field.widget.attrs['class'] = 'form-control'
+
+
+#------------------------------------------------------
+#ฟอร์มเกี่ยวกับ chapter
+#------------------------------------------------------
 class VideochapterForm(forms.ModelForm):
     class Meta:
         model = VideoChapter
@@ -25,6 +38,16 @@ class VideochapterForm(forms.ModelForm):
             'ordered':'ลำดับ'
         }
 
+
+    def __init__(self, *args, **kwargs):
+            super(VideochapterForm, self).__init__(*args, **kwargs)
+            for field_name, field in self.fields.items():
+                field.widget.attrs['class'] = 'form-control'
+
+
+#------------------------------------------------------
+#ฟอร์มเกี่ยวกับ lesson
+#------------------------------------------------------
 class VideolessonForm(forms.ModelForm):
     class Meta:
         model = VideoLesson
@@ -37,3 +60,9 @@ class VideolessonForm(forms.ModelForm):
             'is_locked':'ดูได้เฉพาะผู้ซื้อคอร์สแล้ว',
             'ordered':'ลำดับ',
         }
+
+
+    def __init__(self, *args, **kwargs):
+        super(VideolessonForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'star_ratings',
     'social_django',
     'crispy_forms',
     'app',
@@ -170,3 +171,5 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email', 'profile']
 SOCIAL_AUTH_GOOGLE_OAUTH2_AUTH_EXTRA_ARGUMENTS = {
     'access_type': 'offline'
 }
+
+VIDEO_SERVER_URL = 'http://192.168.1.2:8000'

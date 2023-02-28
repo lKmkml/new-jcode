@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Video,VideoChapter,VideoLesson
+from .models import Video,VideoChapter,VideoLesson,Payment
 # Register your models here.
 class VideolessonAdmin(admin.ModelAdmin):
     list_display=['name','updated','is_locked']
@@ -17,3 +17,4 @@ class VideoAdmin(admin.ModelAdmin):
 admin.site.register(VideoLesson,VideolessonAdmin)
 admin.site.register(VideoChapter,VideoChapterAdmin)
 admin.site.register(Video,VideoAdmin)
+admin.site.register(Payment)

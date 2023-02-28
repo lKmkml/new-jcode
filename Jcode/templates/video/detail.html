@@ -1,91 +1,124 @@
 {% extends "layout/base.html" %}
+{% load humanize %}
+
+{% block subnav %}
+<div class="subnav_new">
+  <div class="container">
+    <div class="float-end mt-2">
+      <h1>฿ {{ video.price|floatformat:0|intcomma }}</h1>
+    </div>
+    {% if count_payment == 0 %}
+    <h1>{{ video.name }}</h1>
+    {% elif count_payment > 0%}
+    <h1>{{ video.name }} (ซื้อคอร์สแล้ว)</h1>
+    {% endif %}
+    <a href="{% url 'video:index' %}" class="text-white"><i class="fa fa-chevron-left"></i>ย้อนกลับ</a>
+  </div>
+</div>
+{% endblock %}
 
 {% block content %}
-  <div class="subnav">
-    <div class="container">
-      <div class="float-end mt-2">
-        <h1>{{ video.price }} ฿</h1>
+  <!-- Payment Dialog -->
+  <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Q/R Payment</h5>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+          <a href="{% url 'video:payment' slug=video.slug %}" class="btn btn-primary">สแกนจ่ายแล้ว</a>
+        </div>
       </div>
-      <h1>{{ video.name }}</h1>
-      <a href="{% url 'video:index' %}"class='text-white'><i class="fa fa-chevron-left"></i>ย้อนกลับ</a>
     </div>
   </div>
+
   <div class="container mt-3">
     <div class="row g-5">
       <div class="col-lg-8">
-        <div class=" mb-4">
+        <div class="mb-5">
           {% if video.videoexample %}
-        <video id="videoplayer" controls width="550" height="400">
-          <source src="http://192.168.1.6:5000{{video.videoexample.url}}" type="video/mp4" >
-          Your browser does not support HTML5 video.
-        </video>
-        {% endif %}
-          </a>
+
+          <video id="videoplayer" controls width="100%" height="400">
+
+            <source src="{{ip}}{{video.videoexample.url}}" type="video/mp4" >
+            Your browser does not support HTML5 video.
+          </video>
+          {% endif %}
         </div>
 
         {% regroup video.get_chapter_set_with_ordered by chapter as chapter_list %}
+        <div class="accordion mb-5" id="accordionExample">
+          {% for chapter in chapter_list %}
+            <div class="card">
+              <div class="card-header" id="heading{{ forloop.counter }}">
+                <button class="btn" type="button" data-toggle="collapse" data-target="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
+                  {{ chapter.grouper }}
+                </button>
+              </div>
 
-        <div class="row g-5">
-          <div class="col-lg-8">
-            <div class="accordion mb-5" id="accordionExample">
-              {% for chapter in chapter_list %}
-                <div class="card">
-                  <div class="card-header" id="heading{{ forloop.counter }}">
+              <div id="collapse{{ forloop.counter }}" class="collapse" aria-labelledby="heading{{ forloop.counter }}" data-parent="#accordionExample">
+                <div class="card-body">
+                  <table class="table table-hover mb-0">
+                    <tbody>
+                      {% for lesson in chapter.list %}
+                      <tr>
+                        <td style="width:50%">{{ lesson.name }}</td>
+                        <td style="width:20%"><i class="far fa-clock"></i> {{ lesson.duration_time }}</td>
 
-                      <button class="btn " type="button" data-toggle="collapse" data-target="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
-                        {{ chapter.grouper }}
-                      </button>
+                        {% if not lesson.is_locked %}
 
-                  </div>
+                        <td style="width:30%" class="text-end"><button videourl='{{ip}}{{lesson.lessonvideo.url}}' class="btn btn-warning btn-sm btn-play"><i class="far fa-circle-play"></i> เล่นวิดีโอ</button></td>
+                        {% elif lesson.is_locked and count_payment == 0%}
 
-                  <div id="collapse{{ forloop.counter }}" class="collapse" aria-labelledby="heading{{ forloop.counter }}" data-parent="#accordionExample">
-                    <div class="card-body">
-                      <table class="table table-bordered table-hover">
-                        <tbody>
-                          {% for lesson in chapter.list %}
-                            <tr>
-                              <td>{{ lesson.name }}</td>
-                              <td><i class="far fa-clock"></i> {{ lesson.duration_time }}</td>
-                              {% if lesson.lessonvideo %}
-                              {% if lesson.is_locked == False %}
-                                <td><button videourl='http://192.168.1.6:5000{{lesson.lessonvideo.url}}' class="btn-play"><i class="far fa-circle-play"></i>เล่นวิดีโอ</button></td>
-                              {% elif lesson.is_locked == True %}
-                                <td><i class="fa fa-lock"></i></td>
-                              {% endif %}
-                              {% endif %}
-                            </tr>
-                          {% endfor %}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
+                        <td style="width:30%" class="text-end"><button type="button" class="btn btn-secondary btn-sm btn-lg" disabled><i class="fa fa-lock"></i></button></td>
+                        {% elif lesson.is_locked and count_payment > 0 %}
+                        <td style="width:30%" class="text-end"><button videourl='{{ip}}{{lesson.lessonvideo.url}}' class="btn btn-warning btn-sm btn-play"><i class="far fa-circle-play"></i> เล่นวิดีโอ</button></td>
+                        {% endif %}
+
+
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
                 </div>
-              {% endfor %}
+              </div>
             </div>
+          {% endfor %}
+        </div>
       </div>
-    </div>
 
-      </div>
       <div class="col-lg-4">
-        <a href="#" class="btn btn-purchase btn-lg py-3 w-100">ซื้อคอร์ส</a>
+        {% if user.is_authenticated %}
+          {% if count_payment == 0 %}
+            <a href="#" class="btn btn-purchase btn-lg py-3 w-100" data-toggle="modal" data-target="#paymentModal">ซื้อคอร์ส</a>
+          {% endif %}
+        {% else %}
+          <a href="{% url 'app:login' %}" class="btn btn-purchase btn-lg py-3 w-100">ซื้อคอร์ส</a>
+        {% endif %}
         <div class="my-5">
           <h4><b>รายละเอียด</b></h4>
           <div class="description_video"> {{ video.description }} </div>
         </div>
-
-        <div class="about_member">
-        <div class="my-3" style="text-align: center;">
-          <h4><b>เกี่ยวกับผู้สอน</b></h4>
-          <div class="my-3" style="text-align: center;">
-            <img src="{{video.member.Profile_image.url}}" style="width: 100px; border-radius: 50%; left: 50%;" alt=""></div>
-          <div class="profile my-4">
-            <div class="mt-3" style="text-align: center;"><h6><b>{{video.member.user.first_name}} {{video.member.user.last_name}} ( {{video.member.user_code}} )</b></h6></div>
-            <div class="description_member mt2 ">{{video.member.description}}</div>
+        <div class="about_member" style="padding: 25px">
+          <h4 class="text-center mb-4"><b>เกี่ยวกับผู้สอน</b></h4>
+          <div class="profile overflow-hidden">
+            <div class="float-start me-4">
+              <img src="{{video.member.Profile_image.url}}" class="mb-4" style="width:90px; height:90px; border-radius:50%; left:50%; border:4px solid rgba(200,200,200,0.4);" alt="">
+            </div>
+            <div class="overflow-hidden">
+              <h6>
+                <b>{{video.member.user.first_name}} {{video.member.user.last_name}}</b>
+                <div class="small" style="color: #727272"> ( @{{video.member.user_code}} )</div>
+              </h6>
+              <div class="description_member my-3">{{video.member.description}}</div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-
     </div>
   </div>
 {% endblock %}

@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
     path('', views.index,name='index'),
-    path('detail/<slug:slug>/', views.BookDetailView.as_view(), name='detail'),
+    path('detail/<slug:slug>/', views.VideoDetailView.as_view(), name='detail'),
     path("course/", views.management_course, name='management_course'),
     path("chapter/", views.management_chapter, name="management_chapter"),
     path("lesson/", views.management_lesson, name="management_lesson"),
@@ -18,5 +18,5 @@ urlpatterns = [
     path('add/', views.video_add, name='video_add'),
     path('addchapter/', views.video_addchapter, name='video_addchapter'),
     path('addlesson/', views.video_addlesson, name='video_addlesson'),
-
+    path('payment/<slug:slug>/', views.payment, name='payment'),
 ]

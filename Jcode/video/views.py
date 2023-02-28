@@ -1,11 +1,12 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from django.views.generic import ListView, DetailView
 from .models import Video,VideoLesson,VideoChapter
-from .models import Category,CategorySub,Member
+from .models import Category,CategorySub,Member,Payment
 from .forms import VideoForm,VideochapterForm,VideolessonForm
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.conf import settings
 from slugify import slugify
 
 
@@ -32,10 +33,35 @@ def index(request):
 #------------------------------------------------------
 
 
-class BookDetailView(DetailView):
+class VideoDetailView(DetailView):
     model = Video
     template_name = 'video/detail.html'
     slug_url_kwarg = 'slug'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(VideoDetailView, self).get_context_data(*args, **kwargs)
+
+        count_obj = 0
+        if self.request.user.is_authenticated:
+            slug = self.kwargs['slug']
+            video = Video.objects.filter(slug=slug).first()
+            member = Member.objects.filter(user_id=self.request.user.id).first()
+            count_obj = Payment.objects.filter(member_id=member.id, video_id=video.id).count()
+
+        context['count_payment'] = count_obj
+        return context
+
+
+def payment(request, slug):
+    if request.user.is_authenticated:
+        video = Video.objects.filter(slug=slug).first()
+        member = Member.objects.filter(user_id=request.user.id).first()
+        count_obj = Payment.objects.filter(member_id=member.id, video_id=video.id).count()
+        if not count_obj:
+            p = Payment(video=video,member=member,payment_amount=video.price)
+            p.save()
+        messages.success(request, 'คุณได้ชำระเงินเรียบร้อยแล้ว')
+    return HttpResponseRedirect(reverse('video:detail', args={slug}))
 
 
 #------------------------------------------------------
@@ -75,7 +101,9 @@ def update_video(request, id):
     if request.method == 'POST':
         form = VideoForm(request.POST, request.FILES, instance=videos)
         if form.is_valid():
-            form.save()
+            video = form.save(commit=False)
+
+            video.save()
             messages.success(request, 'บันทึกสำเร็จ')
             return redirect('video:management_course')
     else:

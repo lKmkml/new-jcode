@@ -1,6 +1,11 @@
 from django.db import models
 from app.models import Category,CategorySub,Member
-# Create your models here.
+from star_ratings.models import Rating
+from django.contrib.contenttypes.fields import GenericRelation
+
+#------------------------------------------------------
+#Model ของ Course
+#------------------------------------------------------
 class Video(models.Model):
     member = models.ForeignKey(Member,null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=250)
@@ -15,18 +20,25 @@ class Video(models.Model):
     published = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    ratings = GenericRelation(Rating, )
+
 
     def get_chapter_set_with_ordered(self):
         return self.videolesson_set.order_by('chapter__ordered','ordered')
 
+
     def __str__(self):
         return self.name
+
 
     @classmethod
     def search(cls, query):
         return cls.objects.filter(title__icontains=query) | cls.objects.filter(content__icontains=query)
 
 
+#------------------------------------------------------
+#Model ของ Chapter
+#------------------------------------------------------
 class VideoChapter(models.Model):
     video = models.ForeignKey(Video, on_delete=models.CASCADE)
     name = models.CharField(max_length=150)
@@ -34,9 +46,14 @@ class VideoChapter(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+
     def __str__(self):
         return self.name
 
+
+#------------------------------------------------------
+#Model ของ Lesson
+#------------------------------------------------------
 class VideoLesson(models.Model):
     videos = models.ForeignKey(Video, on_delete=models.CASCADE,default=1)
     chapter = models.ForeignKey(VideoChapter, on_delete=models.CASCADE)
@@ -49,6 +66,14 @@ class VideoLesson(models.Model):
     updated = models.DateTimeField(auto_now=True)
     ordered = models.IntegerField(default=0)
 
+
     def __str__(self):
         return self.name
 
+
+class Payment(models.Model):
+    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+    member = models.ForeignKey(Member, on_delete=models.CASCADE)
+    payment_date = models.DateTimeField(auto_now_add=True)
+    payment_by = models.CharField(max_length=450,default="Cash")
+    payment_amount = models.FloatField()
