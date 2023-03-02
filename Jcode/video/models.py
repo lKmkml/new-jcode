@@ -1,7 +1,7 @@
 from django.db import models
 from app.models import Category,CategorySub,Member
-from star_ratings.models import Rating
-from django.contrib.contenttypes.fields import GenericRelation
+from star_ratings.models import RatingField
+
 
 #------------------------------------------------------
 #Model ของ Course
@@ -20,7 +20,7 @@ class Video(models.Model):
     published = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    ratings = GenericRelation(Rating, )
+    ratings = RatingField()
 
 
     def get_chapter_set_with_ordered(self):
