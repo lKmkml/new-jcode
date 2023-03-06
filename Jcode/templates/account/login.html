@@ -12,7 +12,7 @@
         <form method="post" novalidate>
             {% csrf_token %}
             <div class="mb-2">
-              <label for="id_username" class="form-label" style="font-size: 14px;">อีเมล์</label>
+              <label for="id_username" class="form-label" style="font-size: 14px;">อีเมล</label>
               <input type="email"  class="form-control" name="username" maxlength="150" required id="id_username" placeholder="Email">
             </div>
             <div class="mb-1">
@@ -27,10 +27,10 @@
               <i class="fa-thin fa-hyphen"></i>
               ― สามารถเข้าสู่ระบบผ่าน ―
             </div>
-            <div class="loginwith">
-                <a href="{% url 'social:begin' 'google-oauth2' %}"><i class="fa-brands fa-google"></i></a>
-                <a href="{% url 'social:begin' 'facebook' %}"><i class="fa-brands fa-facebook"></i></a>
-                <a href="#"><i class="fa-solid fa-mobile-screen-button"></i></a>
+            <div class="loginwith mt-3">
+                <a href="{% url 'social:begin' 'google-oauth2' %}"><i class="fa-brands fa-google"></i></a> &nbsp;
+                <a href="{% url 'social:begin' 'facebook' %}"><i class="fa-brands fa-facebook"></i></a> &nbsp;
+                <a href="#"><i class="fa-solid fa-mobile-screen-button"></i></a> &nbsp;
             </div>
                 <!-- <img class="btngoogle" src="{% static 'img/google.png' %}" alt="" >
                 <div class="loginwith" >

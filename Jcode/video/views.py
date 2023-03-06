@@ -1,13 +1,14 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from django.views.generic import ListView, DetailView
 from .models import Video,VideoLesson,VideoChapter
-from .models import Category,CategorySub,Member,Payment
+from .models import Category,CategorySub,Member,Payment, Rating
 from .forms import VideoForm,VideochapterForm,VideolessonForm
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.conf import settings
 from slugify import slugify
+from django.contrib.auth.models import User
 
 
 #------------------------------------------------------
@@ -27,6 +28,15 @@ def index(request):
 
     return render(request,'video/index.html',context)
 
+
+#------------------------------------------------------
+#Purchase History
+#------------------------------------------------------
+def payment_history(request):
+    member = Member.objects.filter(user_id=request.user.id).first()
+    history = Payment.objects.filter(member_id=member.id)
+    context={'payment_list':history}
+    return render(request,'video/history.html',context)
 
 #------------------------------------------------------
 #Detail Course
@@ -245,3 +255,13 @@ def lesson_delete(request, id):
     return redirect(reverse('video:management_lesson')+'?courseid='+str(courseid)+'&chapterid='+str(chapterid))
 
 
+
+# Rating video
+def rating_video(request, video_id, rating):
+    # print('********* rating33333 **************')
+    # print('request.user.id=', request.user.id)
+    video = Video.objects.get(id=video_id)
+    Rating.objects.filter(video_id=video.id, user_id=request.user.id).delete()
+    user_obj = User.objects.get(id=request.user.id)
+    video.rating_set.create(user=user_obj, rating=rating)
+    return HttpResponseRedirect(reverse('video:detail', args={video.slug}))

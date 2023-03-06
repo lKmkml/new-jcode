@@ -9,7 +9,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.min.css" rel="stylesheet">
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
@@ -83,7 +83,6 @@
         {% endif %}
         {% if user.is_authenticated %}
 
-
         <div class="dropdown">
           <button class="btn btn-primary btn-profile dropdown mx-2" type="button" id="dropdownMenuButton"
             data-toggle="dropdown" aria-expanded="false">
@@ -104,6 +103,12 @@
             </li>
             <li>
               <a  class="dropdown-item mt-2" href="{% url 'app:profile' %}">ตั้งค่าโปรไฟล์</a>
+            </li>
+            <li>
+              <a  class="dropdown-item mt-2" href="{% url 'video:history'%}">ประวัติการซื้อ</a>
+            </li>
+            <li>
+              <a  class="dropdown-item mt-2" href="#">ประวัติการดู</a>
             </li>
             <li>
                 <form method="post" action="{% url 'app:logout' %}" novalidate>
@@ -133,6 +138,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.all.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
+
+{% block script %}{% endblock %}
+
 <script>
   $(function(){
     $('.btn-play').on('click',function(){

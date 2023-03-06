@@ -2,7 +2,7 @@ body{
   font-size: 15px;
   background-color: rgb(255, 255, 255);
   font-weight: 300;
-  font-family: 'Bai jamjuree', sans-serif;
+  font-family: 'Kanit', sans-serif;
 }
 h2{
   text-align: center;
@@ -252,7 +252,9 @@ span {
   color: #FFF;
 } */
 table.table-colored {
-  font-family: arial, sans-serif;
+  font-family: 'Kanit', sans-serif;
+  font-weight: 100;
+  font-size: 15px;
   border-collapse: collapse;
   width: 100%;
   background-color: #5179DC;
@@ -391,3 +393,23 @@ h6{
   background-color: #32b823;
   color: #FFF;
 }
+
+.rating-list li {
+  float: right;
+  color: #ddd;
+  padding: 10px 5px;
+}
+
+.rating-list li:hover,
+.rating-list li:hover ~ li {
+  color: orange;
+}
+
+.rating-list {
+  display: inline-block;
+  list-style: none;
+}
+.checked {
+    color: orange;
+}
+

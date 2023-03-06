@@ -1,7 +1,7 @@
 body{
   font-size: 15px;
   background-color: #D6E1F9;
-  font-family: 'Bai jamjuree', sans-serif;
+  font-family: 'Kanit', sans-serif;
 }
 .navbar-nav .nav-item .nav-link{
   color: #5179DC;
@@ -109,7 +109,7 @@ span {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 400px;
-  height: 400px;
+  height: 420px;
   background: #ffffff;
   border-radius: 20px;
 }
@@ -153,4 +153,7 @@ span {
 }
 h5{
   text-align: left;
+}
+.loginwith{
+  text-align: center;
 }

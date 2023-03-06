@@ -1,4 +1,4 @@
-{% extends "layout/base.html" %}
+{% extends "layout/baseform.html" %}
 
 
 {% block content %}
@@ -6,7 +6,7 @@
     <h6 style="float: left;"><i class="fa fa-chevron-left"></i><a href="{% url 'video:management_chapter' %}?courseid={{courseid}}"> ย้อนกลับ</a></h6>
     <div class="row">
         <div class="col-lg-8 offset-lg-2">
-            <div class="card shadow-sm mb-5">
+            <div class="card shadow-sm mb-5 border-0">
                 <div class="card-body">
             <h3 style="text-align: center;"><b>เพิ่มบทเรียน</b></h3>
             <form id ='add_form' method="post" enctype="multipart/form-data" novalidate action="?courseid={{courseid}}&chapterid={{chapterid}}" style="text-align: center;">

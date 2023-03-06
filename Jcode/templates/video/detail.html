@@ -9,8 +9,8 @@
     </div>
     {% if count_payment == 0 %}
     <h1>{{ video.name }}</h1>
-    {% elif count_payment > 0%}
-    <h1>{{ video.name }} (ซื้อคอร์สแล้ว)</h1>
+    {% elif count_payment > 0 %}
+    <h1>{{ video.name }} <i class="fa-sharp fa-solid fa-circle-check"></i></h1>
     {% endif %}
     <a href="{% url 'video:index' %}" class="text-white"><i class="fa fa-chevron-left"></i>ย้อนกลับ</a>
   </div>
@@ -89,8 +89,40 @@
             </div>
           {% endfor %}
         </div>
-      </div>
 
+        <!-- rating and comment -->
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="my-4">
+              คะแนน :
+
+              {{ video.get_rating|safe }}
+              <span>( {{ video.average_rating }} )</span>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            {% if user.is_authenticated %}
+            <div class="float-end">
+              <span class="me-2">ให้คะแนนคอร์สนี้</span>
+              <ul class="btn btn-light list-inline rating-list">
+                <li onclick="rate(5, {{ video.id }})"><i class="fa fa-star {% if video.user_rating > 4 %} checked {% endif %}" title="Rate 5"></i></li>
+                <li onclick="rate(4, {{ video.id }})"><i class="fa fa-star {% if video.user_rating > 3 %} checked {% endif %}" title="Rate 4"></i></li>
+                <li onclick="rate(3, {{ video.id }})"><i class="fa fa-star {% if video.user_rating > 2 %} checked {% endif %}" title="Rate 3"></i></li>
+                <li onclick="rate(2, {{ video.id }})"><i class="fa fa-star {% if video.user_rating > 1 %} checked {% endif %}" title="Rate 2"></i></li>
+                <li onclick="rate(1, {{ video.id }})"><i class="fa fa-star {% if video.user_rating > 0 %} checked {% endif %}" title="Rate 1"></i></li>
+              </ul>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- place Disqus comment here -->
+        <div class="card mb-5">
+          <div class="card-body">
+            11
+          </div>
+        </div>
+      </div>
       <div class="col-lg-4">
         {% if user.is_authenticated %}
           {% if count_payment == 0 %}
@@ -121,4 +153,21 @@
       </div>
     </div>
   </div>
+{% endblock %}
+
+{% block script %}
+<script>
+const rate = (rating, post_id) => {
+            fetch(`/video/rate/${post_id}/${rating}/`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(rest => {
+                window.location.reload();
+                // you may want to update the rating here
+                // to simplify stuff, I just reload the page
+            })
+        }
+</script>
 {% endblock %}

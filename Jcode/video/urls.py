@@ -19,4 +19,7 @@ urlpatterns = [
     path('addchapter/', views.video_addchapter, name='video_addchapter'),
     path('addlesson/', views.video_addlesson, name='video_addlesson'),
     path('payment/<slug:slug>/', views.payment, name='payment'),
+    path('history/',views.payment_history,name='history'),
+    # rating url
+    path('rate/<int:video_id>/<int:rating>/', views.rating_video,name='rate'),
 ]
